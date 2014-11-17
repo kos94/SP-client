@@ -3,7 +3,7 @@ package sp_client;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-import sp_entities.UserStatus;
+import sp_entities.UserRole;
 
 public class ClientMain {
 	public static void main(String[] args) {

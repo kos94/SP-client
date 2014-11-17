@@ -1,5 +1,7 @@
 package sp_client;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Observable;
@@ -11,30 +13,16 @@ import sp_entities.GroupSubjectMarks;
 import sp_entities.Semester;
 import sp_entities.Semesters;
 import sp_entities.StudentSemMarks;
-import sp_entities.UserStatus;
+import sp_entities.UserRole;
 import sp_entities.XMLSerializer;
 import sp_server.Server;
 import sp_server.ServerService;
 
 public class MainModel extends Observable {
-	private Server server;
-	
-	private Semester curSemester;
-	private String curSubject;
-	private String curGroup;
-	private int curStage;
-	private UserStatus curRole;
-	
-	private String loginMessage;
-	private Semesters semesters;
-	private List<String> subjects;
-	private List<String> groups;
-	private GroupSubjectMarks groupSubjMarks;
-	private GroupStageMarks groupStageMarks;
-	private StudentSemMarks studentMarks;
-	
 	public enum MainEvent {
 		AUTHORIZATION,
+		AUTHORIZATION_FAIL,
+		ROLES,
 		SEMESTERS,
 		SUBJECTS, 
 		GROUPS, 
@@ -44,33 +32,90 @@ public class MainModel extends Observable {
 		STUDENT_SEM_MARKS;
 	}
 	
+	private Server server;
+	private AuthData authData;
+	
+	private MainEvent curEvent;
+	private UserScenario scenario;
+	
+	private UserRole[] roles;
+	
 	public MainModel() throws Exception {
 		ServerService service = new ServerService();
 		server = service.getServerPort();
 	}
 	
 	public void tempStart() {
+		curEvent = MainEvent.AUTHORIZATION;
 		setChanged();
-		this.notifyObservers(MainEvent.AUTHORIZATION);
-//		String data = server.login(1, "aaa");
-//		System.out.println(data);
-//		AuthData authData = (AuthData)XMLSerializer.xmlToObject(data, AuthData.class);
-//		String idSession = authData.getIdSession();
-//		
-//		String sem = server.getTeacherSemesters(idSession);
-//		semesters = (Semesters)
-//				XMLSerializer.xmlToObject(sem, Semesters.class);
-
+		notifyObservers(curEvent);
 	}
 	
 	public void login(int id, String password) {
-		String s = server.login(id, password);
-		System.out.println(s);
+		String authString = server.login(id, password);
+		if(authString == null) {
+			authData = null;
+			curEvent = MainEvent.AUTHORIZATION_FAIL;
+		} else {
+			authData = (AuthData) XMLSerializer
+					.xmlToObject(authString, AuthData.class);
+			//save roles list
+			UserRole role = authData.getStatus();
+			if(role == UserRole.CURATOR) {
+				roles = new UserRole[]{UserRole.TEACHER, role};
+			} else {
+				roles = new UserRole[]{role};
+			}
+			curEvent = MainEvent.ROLES;
+		}
+		
+		setChanged();
+		notifyObservers(curEvent);
 	}
 	
-	public void badLogin(String message) {
-		loginMessage = message;
+	public void setListIndex(int ind) {
+		if(ind < 0) return;
+		if(curEvent == MainEvent.ROLES) {
+			if(ind >= roles.length) return; 
+			String idS = authData.getIdSession();
+			switch(roles[ind]) {
+			case TEACHER:
+				scenario = new TeacherScenario(server, idS);
+				break;
+			case CURATOR:
+				scenario = new CuratorScenario(server, idS);
+				break;
+			case DEPWORKER:
+				scenario = new DepWorkerScenario(server, idS);
+				break;
+			case STUDENT:
+				scenario = new StudentScenario(server, idS);
+				break;
+			}
+		} else {
+			scenario.setListIndex(ind);
+		}
+		curEvent = scenario.getCurEvent();
+		setChanged();
+		notifyObservers(curEvent);
 	}
-	
-	public Semesters getSemesters() { return semesters; }
+
+	public AuthData getAuthData() { return authData; }
+	public List<String> getRoles() {
+		List<String> list = new ArrayList<>();
+		for(int i=0; i<roles.length; i++)
+			list.add( roles[i].getRusName() );
+		return list;
+	}
+	public List<String> getSemesters() { 
+		List<Semester> list = scenario.semesters.getSemesters(); 
+		List<String> strings = new ArrayList<>();
+		for(Semester s : list) {
+			strings.add(s.toString());
+		}
+		return strings;
+	}
+	public List<String> getSubjects() { return scenario.subjects; }
+	public List<String> getGroups() { return scenario.groups; }
+	public GroupSubjectMarks getSubjectMarks() { return scenario.groupSubjMarks; }
 }

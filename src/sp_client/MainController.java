@@ -1,7 +1,5 @@
 package sp_client;
 
-import sp_entities.UserStatus;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -11,7 +9,7 @@ import java.util.Observer;
 
 import javax.swing.JList;
 
-public class MainController implements ActionListener, Observer {
+public class MainController implements ActionListener, MouseListener, Observer {
 	private final MainModel model;
 	private final MainView view;
 	
@@ -20,21 +18,26 @@ public class MainController implements ActionListener, Observer {
 		this.view = view;
 		model.addObserver(this);
 	}
-//	@Override
-//	public void mouseClicked(MouseEvent e) {
-//		if(e.getClickCount() == 1) {
-//			JList<String> list = (JList<String>)e.getSource();
-//			System.out.println(list.getSelectedIndex());
-//		}
-//	}
-//	@Override
-//	public void mouseEntered(MouseEvent e) {}
-//	@Override
-//	public void mouseExited(MouseEvent e) {}
-//	@Override
-//	public void mousePressed(MouseEvent e) {}
-//	@Override
-//	public void mouseReleased(MouseEvent e) {}
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		if(e.getClickCount() != 1) return;
+		Object source = e.getSource();
+		
+		if(source instanceof JList<?>) {
+			JList<?> list = (JList<?>)e.getSource();
+			int index = list.locationToIndex(e.getPoint());
+			model.setListIndex(index);
+		}
+		//TODO click on navigation
+	}
+	@Override
+	public void mouseEntered(MouseEvent e) {}
+	@Override
+	public void mouseExited(MouseEvent e) {}
+	@Override
+	public void mousePressed(MouseEvent e) {}
+	@Override
+	public void mouseReleased(MouseEvent e) {}
 	
 	@Override
 	public void update(Observable o, Object obj) {
@@ -44,7 +47,7 @@ public class MainController implements ActionListener, Observer {
 	@Override
 	public void actionPerformed(ActionEvent evt) {
 		// TODO Auto-generated method stub
-		System.out.println("actionPerformed");
+		System.out.println("controller actionPerformed");
 		String command = evt.getActionCommand();
 		
 		switch(command) {
@@ -53,15 +56,10 @@ public class MainController implements ActionListener, Observer {
 			String pass = view.getPassword();
 			if(pass.length() == 0 || loginStr.length() == 0) 
 				return;
-			try {
-				int id = Integer.parseInt(loginStr);
-				model.login(id, pass);
-			} catch (Exception e) {
-				model.badLogin("Неверный ID");
-				return;
-			}
+			int id = Integer.parseInt(loginStr);
+			model.login(id, pass);
 			
-//			System.out.println("login confirmation: " + view.getLogin() + " " + view.getPassword());
+			System.out.println("login confirmation: " + view.getLogin() + " " + view.getPassword());
 			break;
 		}
 	}
