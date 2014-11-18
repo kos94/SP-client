@@ -166,15 +166,21 @@ public class MainView extends JFrame implements Observer {
 		case GROUPS:
 			mainPanel.setListData(model.getGroups());
 			break;
+		case GROUP_MENU:
+			mainPanel.setListData(model.getGroupMenu());
+			break;
 		case GROUP_SUBJECT_MARKS:
-			//TODO draw table
 			model.getSubjectMarks().print();
 			mainPanel.showMarks(model.getSubjectMarks());
+			break;
+		case GROUP_STAGE_MARKS:
+			model.getStageMarks().print();
+			mainPanel.showMarks(model.getStageMarks());
 			break;
 		}
 		
 		if(mainPanel != null) {
-			if(newEvent && event != MainEvent.ROLES) {
+			if(newEvent) {
 				mainPanel.addEventToHistory(model.getUserChoice());
 			} else if(!newEvent) {
 				mainPanel.setHistoryPosition(model.getHistoryPosition());

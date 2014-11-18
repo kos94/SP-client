@@ -5,17 +5,22 @@ import java.awt.FlowLayout;
 import java.util.List;
 
 import javax.swing.*;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableModel;
 
 import sp_entities.AuthData;
+import sp_entities.GroupStageMarks;
 import sp_entities.GroupSubjectMarks;
+import sp_entities.StudentSemMarks;
 
 public class MainPanel extends JPanel {
 	private MainModel model;
 	private MainController controller;
-	
+
 	private static final int PANEL_X = 600, PANEL_Y = 400;
 	private static final int TOP_PANEL_Y = 100;
 	private JPanel topPanel;
+	private JPanel historyPanel;
 	private int hSize;
 	private JList<String> mainList;
 	private JScrollPane mainScroll;
@@ -28,8 +33,12 @@ public class MainPanel extends JPanel {
 		this.controller = controller;
 		hSize = 0;
 		mainListModel = new DefaultListModel<String>();
+		marksTable = new MarksTable();
+		
+		historyPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		historyPanel.setPreferredSize(new Dimension(PANEL_X, TOP_PANEL_Y));
 	}
-
+	
 	public void showMainPage(AuthData data) {
 		this.removeAll();
 
@@ -48,52 +57,70 @@ public class MainPanel extends JPanel {
 		this.add(topPanel);
 
 		mainList = new JList<String>(mainListModel);
-		setListData(model.getRoles());
 		mainList.addMouseListener(controller);
-		
 		mainScroll = new JScrollPane(mainList);
-		mainScroll.setPreferredSize(new Dimension(PANEL_X, PANEL_Y-TOP_PANEL_Y));
-		
+		mainScroll.setPreferredSize(new Dimension(PANEL_X, PANEL_Y
+				- TOP_PANEL_Y));
+		setListData(model.getRoles());
+
 		setPreferredSize(new Dimension(PANEL_X, PANEL_Y));
 		add(mainScroll);
+		revalidate();
+		repaint();
 	}
-	
+
 	public void showHistoryPanel() {
 		topPanel.removeAll();
+		topPanel.add(historyPanel);
 		topPanel.revalidate();
 		topPanel.repaint();
 	}
-	
+
 	public void setListData(List<String> data) {
+		if(!mainScroll.getViewport().getView().equals(mainList)) {
+			mainScroll.setViewportView(mainList);
+		}
+		
 		mainListModel.removeAllElements();
-		for(String s : data) {
+		for (String s : data) {
 			mainListModel.addElement(s);
 		}
 	}
-	
+
 	public void addEventToHistory(String eventName) {
 		JButton button = new JButton(eventName);
 		button.setActionCommand(MainView.HISTORY_BUTTON_COMMAND + (hSize++));
 		button.addActionListener(controller);
-		topPanel.add(button);
-		topPanel.revalidate();
+		historyPanel.add(button);
+		historyPanel.revalidate();
+		System.out.println("add event " + eventName + " : " + MainView.HISTORY_BUTTON_COMMAND + (hSize-1));
 	}
-	
+
 	public void setHistoryPosition(int pos) {
-		assert(pos < hSize);
-		while(hSize > pos+1) {
-			topPanel.remove(pos+1);
+		assert (pos < hSize);
+		while (hSize > pos + 1) {
+			historyPanel.remove(pos + 1);
 			hSize--;
 		}
-		topPanel.revalidate();
-		topPanel.repaint();
+		historyPanel.revalidate();
+		historyPanel.repaint();
 	}
-	
+
 	public void showMarks(GroupSubjectMarks m) {
-		marksTable = new JTable(5,5);
-		mainScroll.setVisible(false);
-		add(marksTable);
-		revalidate();
-		repaint();
+		((MarksTable)marksTable).setContent(m);
+		placeMarksToScroll();
+	}
+	public void showMarks(GroupStageMarks m) {
+		((MarksTable)marksTable).setContent(m);
+		placeMarksToScroll();
+	}
+	public void showMarks(StudentSemMarks m) {
+		((MarksTable)marksTable).setContent(m);
+		placeMarksToScroll();
+	}
+	private void placeMarksToScroll() {
+		mainScroll.setViewportView(marksTable);
+		mainScroll.revalidate();
+		mainScroll.repaint();
 	}
 }

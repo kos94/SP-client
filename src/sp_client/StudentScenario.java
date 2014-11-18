@@ -20,30 +20,6 @@ public class StudentScenario extends UserScenario {
 		semesters = (Semesters) XMLSerializer.xmlToObject(semStr, Semesters.class);
 		curEvent = MainEvent.SEMESTERS;
 	}
-	
-	@Override
-	protected void setSemester(Semester sem) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	protected void setSubject(String subj) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	protected void setGroup(String group) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	protected void setGroupMenu(int index) {
-		// TODO Auto-generated method stub
-		
-	}
 
 	@Override
 	public void setListIndex(int ind) {

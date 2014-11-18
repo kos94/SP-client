@@ -49,7 +49,6 @@ public class MainModel extends Observable {
 	private UserRole[] roles;
 	private UserScenario scenario;
 	
-	
 	public MainModel() throws Exception {
 		ServerService service = new ServerService();
 		server = service.getServerPort();
@@ -80,6 +79,7 @@ public class MainModel extends Observable {
 			curEvent = MainEvent.ROLES;
 		}
 		newEvent = true;
+		userChoice = "√лавное меню";
 		setChanged();
 		notifyObservers(curEvent);
 	}
@@ -143,5 +143,14 @@ public class MainModel extends Observable {
 	}
 	public List<String> getSubjects() { return scenario.subjects; }
 	public List<String> getGroups() { return scenario.groups; }
+	public List<String> getGroupMenu() {
+		List<String> menu = new ArrayList<>();
+		menu.add("ќценки за 1-й модуль");
+		menu.add("ќценки за 2-й модуль");
+		menu.add("»тоговые оценки");
+		menu.add("ќценки по дисциплинам");
+		return menu;
+	}
 	public GroupSubjectMarks getSubjectMarks() { return scenario.groupSubjMarks; }
+	public GroupStageMarks getStageMarks() { return scenario.groupStageMarks; }
 }
