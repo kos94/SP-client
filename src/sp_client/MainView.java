@@ -3,14 +3,13 @@ package sp_client;
 import javax.swing.*;
 import javax.swing.text.*;
 
+import sp_client.MainModel.MainEvent;
 import sp_entities.AuthData;
 
 import java.awt.*;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseListener;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.List;
 
 class DigitsFieldDocument extends PlainDocument {
 	private int limit;
@@ -85,58 +84,12 @@ class LoginPanel extends JPanel {
 	}
 }
 
-class MainPanel extends JPanel {
-	private MainModel model;
-	private MouseListener controller;
-	private JList<String> mainList;
-	private DefaultListModel<String> mainListModel;
-	private JPanel topPanel;
 
-	public MainPanel(MainModel model, MouseListener controller) {
-		super();
-		this.model = model;
-		this.controller = controller;
-		add(new JLabel("Main panel"));
-		mainListModel = new DefaultListModel<String>();
-	}
-
-	public void showMainPage(AuthData data) {
-		this.removeAll();
-
-		topPanel = new JPanel();
-		topPanel.add(new JLabel("Имя: " + data.getName(), SwingConstants.LEFT));
-		String dep = data.getDepartment();
-		if (dep != null) {
-			topPanel.add(new JLabel("Кафедра: " + dep));
-		}
-		String group = data.getGroup();
-		if (group != null) {
-			topPanel.add(new JLabel("Группа: " + group));
-		}
-
-		this.add(topPanel);
-
-		mainList = new JList<String>(mainListModel);
-		setListData(model.getRoles());
-		mainList.addMouseListener(controller);
-		
-		JScrollPane listScroller = new JScrollPane(mainList);
-		listScroller.setPreferredSize(new Dimension(380, 200));
-		
-		setPreferredSize(new Dimension(400, 300));
-		add(listScroller);
-	}
-	
-	public void setListData(List<String> data) {
-		mainListModel.removeAllElements();
-		for(String s : data) {
-			mainListModel.addElement(s);
-		}
-	}
-}
 
 public class MainView extends JFrame implements Observer {
+	//TODO maybe delete (replace with switch (source)
 	public static final String LOGIN_ACTION_COMMAND = "login";
+	public static final String HISTORY_BUTTON_COMMAND = "historybutton";
 	private MainModel model;
 	private MainController controller;
 	private LoginPanel loginPanel;
@@ -148,29 +101,7 @@ public class MainView extends JFrame implements Observer {
 
 		model = m;
 		model.addObserver(this);
-
-		// ArrayList<String> values = new ArrayList<>();
-		// for(int i=0; i<5; i++)
-		// values.add("Семестр " + (i+1));
-		// Object[] objData = values.toArray();
-		// String[] stringData = Arrays.copyOf(objData, objData.length,
-		// String[].class);
-		// mainList = new JList<>(stringData);
-		// mainList.setName("first list");
-		//
-		// JScrollPane listScroller = new JScrollPane(mainList);
-		// listScroller.setPreferredSize(new Dimension(380, 280));
-		// JPanel panel = new JPanel();
-		// panel.setPreferredSize(new Dimension(400,300));
-		// panel.add(listScroller);
-		//
-		// this.add(panel);
-		// this.pack();
 		controller = new MainController(model, this);
-		// mainList.addMouseListener(controller);
-		//
-		// //TODO delete this
-		// this.setVisible(true);
 	}
 
 	private void placeToCenter() {
@@ -191,6 +122,8 @@ public class MainView extends JFrame implements Observer {
 	public void update(Observable o, Object arg) {
 		MainModel.MainEvent event = (MainModel.MainEvent) arg;
 		System.out.println("update on view" + event.name());
+		boolean newEvent = model.isNewEvent();
+		
 		switch (event) {
 		case AUTHORIZATION:
 			System.out.println("show dialog");
@@ -208,17 +141,23 @@ public class MainView extends JFrame implements Observer {
 			return;
 		case ROLES:
 			AuthData data = model.getAuthData();
-			this.setVisible(false);
-			this.getContentPane().removeAll();
-			mainPanel = new MainPanel(model, controller);
-			mainPanel.showMainPage(data);
-			this.add(mainPanel);
-			this.pack();
-			this.placeToCenter();
-			this.setVisible(true);
+			if(newEvent) {
+				this.setVisible(false);
+				this.getContentPane().removeAll();
+				mainPanel = new MainPanel(model, controller);
+				mainPanel.showMainPage(data);
+				this.add(mainPanel);
+				this.pack();
+				this.placeToCenter();
+				this.setVisible(true);
+			} else {
+				mainPanel.showMainPage(data);
+			}
 			break;
 		case SEMESTERS:
-			this.setVisible(true);
+			if(newEvent) {
+				mainPanel.showHistoryPanel();
+			}
 			mainPanel.setListData(model.getSemesters());
 			break;
 		case SUBJECTS:
@@ -230,7 +169,16 @@ public class MainView extends JFrame implements Observer {
 		case GROUP_SUBJECT_MARKS:
 			//TODO draw table
 			model.getSubjectMarks().print();
+			mainPanel.showMarks(model.getSubjectMarks());
 			break;
+		}
+		
+		if(mainPanel != null) {
+			if(newEvent && event != MainEvent.ROLES) {
+				mainPanel.addEventToHistory(model.getUserChoice());
+			} else if(!newEvent) {
+				mainPanel.setHistoryPosition(model.getHistoryPosition());
+			}
 		}
 	}
 

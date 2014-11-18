@@ -20,29 +20,40 @@ import sp_server.ServerService;
 
 public class MainModel extends Observable {
 	public enum MainEvent {
-		AUTHORIZATION,
-		AUTHORIZATION_FAIL,
-		ROLES,
-		SEMESTERS,
-		SUBJECTS, 
-		GROUPS, 
-		GROUP_MENU,
-		GROUP_SUBJECT_MARKS,
-		GROUP_STAGE_MARKS,
-		STUDENT_SEM_MARKS;
+		AUTHORIZATION("Авторизация"),
+		AUTHORIZATION_FAIL("Ошибка авторизации"),
+		ROLES("Роли"),
+		SEMESTERS("Семестры"),
+		SUBJECTS("Предметы"), 
+		GROUPS("Группы"), 
+		GROUP_MENU("Меню группы"),
+		GROUP_SUBJECT_MARKS("Оценки"),
+		GROUP_STAGE_MARKS("Оценки"),
+		STUDENT_SEM_MARKS("Оценки");
+		
+		private String displayedName;
+		private MainEvent(String n) {
+			displayedName = n;
+		}
+		public String toString() {
+			return displayedName;
+		}
 	}
 	
 	private Server server;
 	private AuthData authData;
 	
+	private String userChoice;
 	private MainEvent curEvent;
+	private boolean newEvent;
+	private UserRole[] roles;
 	private UserScenario scenario;
 	
-	private UserRole[] roles;
 	
 	public MainModel() throws Exception {
 		ServerService service = new ServerService();
 		server = service.getServerPort();
+		newEvent = false;
 	}
 	
 	public void tempStart() {
@@ -68,17 +79,18 @@ public class MainModel extends Observable {
 			}
 			curEvent = MainEvent.ROLES;
 		}
-		
+		newEvent = true;
 		setChanged();
 		notifyObservers(curEvent);
 	}
 	
-	public void setListIndex(int ind) {
-		if(ind < 0) return;
+	public void setListChoice(int index, String value) {
+		userChoice = value;
+		if(index < 0) return;
 		if(curEvent == MainEvent.ROLES) {
-			if(ind >= roles.length) return; 
+			if(index >= roles.length) return; 
 			String idS = authData.getIdSession();
-			switch(roles[ind]) {
+			switch(roles[index]) {
 			case TEACHER:
 				scenario = new TeacherScenario(server, idS);
 				break;
@@ -93,13 +105,27 @@ public class MainModel extends Observable {
 				break;
 			}
 		} else {
-			scenario.setListIndex(ind);
+			scenario.setListIndex(index);
 		}
 		curEvent = scenario.getCurEvent();
+		newEvent = true;
 		setChanged();
 		notifyObservers(curEvent);
 	}
 
+	public void goBack(int historyPos) {
+		System.out.println("model go back");
+		newEvent = false;
+		scenario.goBack(historyPos);
+		curEvent = scenario.getCurEvent();
+		setChanged();
+		System.out.println("curEvent: " + scenario.getCurEvent());
+		notifyObservers(curEvent);
+	}
+	
+	public boolean isNewEvent() { return newEvent; }
+	public String getUserChoice() { return userChoice; }
+	public int getHistoryPosition() { return scenario.getHistoryPosition(); }
 	public AuthData getAuthData() { return authData; }
 	public List<String> getRoles() {
 		List<String> list = new ArrayList<>();

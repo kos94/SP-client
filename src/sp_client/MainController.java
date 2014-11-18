@@ -1,5 +1,6 @@
 package sp_client;
 
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -25,8 +26,9 @@ public class MainController implements ActionListener, MouseListener, Observer {
 		
 		if(source instanceof JList<?>) {
 			JList<?> list = (JList<?>)e.getSource();
-			int index = list.locationToIndex(e.getPoint());
-			model.setListIndex(index);
+			int index = list.getSelectedIndex();
+			String value = (String) list.getSelectedValue();
+			model.setListChoice(index, value);
 		}
 		//TODO click on navigation
 	}
@@ -47,11 +49,9 @@ public class MainController implements ActionListener, MouseListener, Observer {
 	@Override
 	public void actionPerformed(ActionEvent evt) {
 		// TODO Auto-generated method stub
-		System.out.println("controller actionPerformed");
 		String command = evt.getActionCommand();
-		
-		switch(command) {
-		case MainView.LOGIN_ACTION_COMMAND:
+		System.out.println("controller actionPerformed\n" + command);
+		if(command.equals(MainView.LOGIN_ACTION_COMMAND)) {
 			String loginStr = view.getLogin();
 			String pass = view.getPassword();
 			if(pass.length() == 0 || loginStr.length() == 0) 
@@ -60,7 +60,11 @@ public class MainController implements ActionListener, MouseListener, Observer {
 			model.login(id, pass);
 			
 			System.out.println("login confirmation: " + view.getLogin() + " " + view.getPassword());
-			break;
+		} else if(command.matches("(" + MainView.HISTORY_BUTTON_COMMAND + ")[0-9]+")) {
+			String strNumber = command.substring(
+					MainView.HISTORY_BUTTON_COMMAND.length());
+			int number = Integer.parseInt(strNumber);
+			model.goBack(number);
 		}
 	}
 }

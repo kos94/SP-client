@@ -16,7 +16,7 @@ public class TeacherScenario extends UserScenario {
 		String semStr = server.getTeacherSemesters(idSession);
 		System.out.println(semStr);
 		semesters = (Semesters) XMLSerializer.xmlToObject(semStr, Semesters.class);
-		curEvent = MainEvent.SEMESTERS;
+		goToEvent(MainEvent.SEMESTERS);
 	}
 	
 	@Override
@@ -50,13 +50,13 @@ public class TeacherScenario extends UserScenario {
 			Semester sem = semesters.getSemesters().get(ind);
 			curSemester = XMLSerializer.objectToXML(sem);
 			subjects = server.getTeacherSubjects(idSession, curSemester);
-			curEvent = MainEvent.SUBJECTS;
+			goToEvent(MainEvent.SUBJECTS);
 			break;
 		case SUBJECTS:
 			if(ind >= subjects.size()) return;
 			curSubject = subjects.get(ind);
 			groups = server.getTeacherGroups(idSession, curSemester, curSubject);
-			curEvent = MainEvent.GROUPS;
+			goToEvent(MainEvent.GROUPS);
 			break;
 		case GROUPS:
 			if(ind >= groups.size()) return;
@@ -64,10 +64,8 @@ public class TeacherScenario extends UserScenario {
 			String xmlMarks = server.getSubjectMarks(idSession, curGroup, curSubject);
 			groupSubjMarks = (GroupSubjectMarks) XMLSerializer
 					.xmlToObject(xmlMarks, GroupSubjectMarks.class);
-			curEvent = MainEvent.GROUP_SUBJECT_MARKS;
+			goToEvent(MainEvent.GROUP_SUBJECT_MARKS);
 		}
 	}
-
-	
 
 }
