@@ -1,8 +1,10 @@
 package sp_client;
 
 import sp_client.MainModel.MainEvent;
+import sp_entities.GroupSubjectMarks;
 import sp_entities.Semester;
 import sp_entities.Semesters;
+import sp_entities.StudentSemMarks;
 import sp_entities.XMLSerializer;
 import sp_server.Server;
 
@@ -18,13 +20,19 @@ public class StudentScenario extends UserScenario {
 		String semStr = server.getStudentSemesters(idSession);
 		System.out.println(semStr);
 		semesters = (Semesters) XMLSerializer.xmlToObject(semStr, Semesters.class);
-		curEvent = MainEvent.SEMESTERS;
+		goToEvent(MainEvent.SEMESTERS);
 	}
 
 	@Override
 	public void setListIndex(int ind) {
-		// TODO Auto-generated method stub
-		
+		if(curEvent == MainEvent.SEMESTERS) {
+			assert(ind < semesters.getSemesters().size());
+			Semester sem = semesters.getSemesters().get(ind);
+			curSemester = XMLSerializer.objectToXML(sem);
+			String xmlMarks = server.getStudentMarks(idSession, curSemester);
+			marks = (StudentSemMarks) XMLSerializer
+					.xmlToObject(xmlMarks, StudentSemMarks.class);
+			goToEvent(MainEvent.MARKS);
+		}
 	}
-
 }

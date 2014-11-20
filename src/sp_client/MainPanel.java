@@ -11,6 +11,7 @@ import javax.swing.table.TableModel;
 import sp_entities.AuthData;
 import sp_entities.GroupStageMarks;
 import sp_entities.GroupSubjectMarks;
+import sp_entities.IMarks;
 import sp_entities.StudentSemMarks;
 
 public class MainPanel extends JPanel {
@@ -25,7 +26,7 @@ public class MainPanel extends JPanel {
 	private JList<String> mainList;
 	private JScrollPane mainScroll;
 	private DefaultListModel<String> mainListModel;
-	private JTable marksTable;
+	private MarksTable marksTable;
 
 	public MainPanel(MainModel model, MainController controller) {
 		super();
@@ -59,8 +60,8 @@ public class MainPanel extends JPanel {
 		mainList = new JList<String>(mainListModel);
 		mainList.addMouseListener(controller);
 		mainScroll = new JScrollPane(mainList);
-		mainScroll.setPreferredSize(new Dimension(PANEL_X, PANEL_Y
-				- TOP_PANEL_Y));
+		mainScroll.setPreferredSize(new Dimension(PANEL_X-10, PANEL_Y
+				- TOP_PANEL_Y-10));
 		setListData(model.getRoles());
 
 		setPreferredSize(new Dimension(PANEL_X, PANEL_Y));
@@ -77,10 +78,13 @@ public class MainPanel extends JPanel {
 	}
 
 	public void setListData(List<String> data) {
+		System.out.println("set list data");
 		if(!mainScroll.getViewport().getView().equals(mainList)) {
+			System.out.println("switch main scroll to list");
 			mainScroll.setViewportView(mainList);
 		}
-		
+//		mainScroll.revalidate();
+//		mainScroll.repaint();
 		mainListModel.removeAllElements();
 		for (String s : data) {
 			mainListModel.addElement(s);
@@ -106,20 +110,13 @@ public class MainPanel extends JPanel {
 		historyPanel.repaint();
 	}
 
-	public void showMarks(GroupSubjectMarks m) {
-		((MarksTable)marksTable).setContent(m);
-		placeMarksToScroll();
-	}
-	public void showMarks(GroupStageMarks m) {
-		((MarksTable)marksTable).setContent(m);
-		placeMarksToScroll();
-	}
-	public void showMarks(StudentSemMarks m) {
-		((MarksTable)marksTable).setContent(m);
-		placeMarksToScroll();
-	}
-	private void placeMarksToScroll() {
+	public void showMarks(IMarks m) {
+		m.print();
+		System.out.println("show marks");
+		marksTable.setContent(m);
 		mainScroll.setViewportView(marksTable);
+		mainScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		mainScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 		mainScroll.revalidate();
 		mainScroll.repaint();
 	}

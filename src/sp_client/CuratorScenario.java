@@ -46,9 +46,9 @@ public class CuratorScenario extends UserScenario {
 			if(ind < 3) {
 				curStage = ind + 1;
 				String xmlMarks = server.getStageMarks(idSession, curGroup, curSemester, curStage);
-				groupStageMarks = (GroupStageMarks) XMLSerializer
+				marks = (GroupStageMarks) XMLSerializer
 						.xmlToObject(xmlMarks, GroupStageMarks.class);
-				goToEvent(MainEvent.GROUP_STAGE_MARKS);
+				goToEvent(MainEvent.MARKS);
 			} else {
 				subjects = server.getGroupSubjects(idSession, curSemester, curGroup);
 				goToEvent(MainEvent.SUBJECTS);
@@ -58,9 +58,9 @@ public class CuratorScenario extends UserScenario {
 			assert(ind < subjects.size());
 			curSubject = subjects.get(ind);
 			String xmlMarks = server.getSubjectMarks(idSession, curGroup, curSubject);
-			groupSubjMarks = (GroupSubjectMarks) XMLSerializer
+			marks = (GroupSubjectMarks) XMLSerializer
 					.xmlToObject(xmlMarks, GroupSubjectMarks.class);
-			goToEvent(MainEvent.GROUP_SUBJECT_MARKS);
+			goToEvent(MainEvent.MARKS);
 			break;
 		}
 	}

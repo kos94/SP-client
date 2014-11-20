@@ -1,20 +1,7 @@
 package sp_client;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
-
-import sp_entities.AuthData;
-import sp_entities.GroupStageMarks;
-import sp_entities.GroupSubjectMarks;
-import sp_entities.Semester;
-import sp_entities.Semesters;
-import sp_entities.StudentSemMarks;
-import sp_entities.UserRole;
-import sp_entities.XMLSerializer;
+import java.util.*;
+import sp_entities.*;
 import sp_server.Server;
 import sp_server.ServerService;
 
@@ -27,9 +14,7 @@ public class MainModel extends Observable {
 		SUBJECTS("Предметы"), 
 		GROUPS("Группы"), 
 		GROUP_MENU("Меню группы"),
-		GROUP_SUBJECT_MARKS("Оценки"),
-		GROUP_STAGE_MARKS("Оценки"),
-		STUDENT_SEM_MARKS("Оценки");
+		MARKS("Оценки");
 		
 		private String displayedName;
 		private MainEvent(String n) {
@@ -151,6 +136,5 @@ public class MainModel extends Observable {
 		menu.add("Оценки по дисциплинам");
 		return menu;
 	}
-	public GroupSubjectMarks getSubjectMarks() { return scenario.groupSubjMarks; }
-	public GroupStageMarks getStageMarks() { return scenario.groupStageMarks; }
+	public IMarks getMarks() { return scenario.marks; }
 }

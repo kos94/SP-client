@@ -169,13 +169,8 @@ public class MainView extends JFrame implements Observer {
 		case GROUP_MENU:
 			mainPanel.setListData(model.getGroupMenu());
 			break;
-		case GROUP_SUBJECT_MARKS:
-			model.getSubjectMarks().print();
-			mainPanel.showMarks(model.getSubjectMarks());
-			break;
-		case GROUP_STAGE_MARKS:
-			model.getStageMarks().print();
-			mainPanel.showMarks(model.getStageMarks());
+		case MARKS:
+			mainPanel.showMarks(model.getMarks());
 			break;
 		}
 		

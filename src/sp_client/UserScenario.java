@@ -3,11 +3,7 @@ import java.util.List;
 import java.util.Stack;
 
 import sp_client.MainModel.MainEvent;
-import sp_entities.GroupStageMarks;
-import sp_entities.GroupSubjectMarks;
-import sp_entities.Semester;
-import sp_entities.Semesters;
-import sp_entities.StudentSemMarks;
+import sp_entities.*;
 import sp_server.Server;
 
 public abstract class UserScenario {
@@ -24,9 +20,7 @@ public abstract class UserScenario {
 	protected Semesters semesters;
 	protected List<String> subjects;
 	protected List<String> groups;
-	protected GroupSubjectMarks groupSubjMarks;
-	protected GroupStageMarks groupStageMarks;
-	protected StudentSemMarks studentMarks;	
+	protected IMarks marks;
 	
 	public UserScenario(Server server, String idSession) {
 		this.server = server;

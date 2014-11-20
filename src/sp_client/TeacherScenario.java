@@ -38,9 +38,9 @@ public class TeacherScenario extends UserScenario {
 			assert(ind < groups.size());
 			curGroup = groups.get(ind);
 			String xmlMarks = server.getSubjectMarks(idSession, curGroup, curSubject);
-			groupSubjMarks = (GroupSubjectMarks) XMLSerializer
+			marks = (GroupSubjectMarks) XMLSerializer
 					.xmlToObject(xmlMarks, GroupSubjectMarks.class);
-			goToEvent(MainEvent.GROUP_SUBJECT_MARKS);
+			goToEvent(MainEvent.MARKS);
 		}
 	}
 
