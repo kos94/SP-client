@@ -111,7 +111,7 @@ public class MainPanel extends JPanel {
 	}
 
 	public void showMarks(IMarks m) {
-		m.print();
+		m.printMarks();
 		System.out.println("show marks");
 		marksTable.setContent(m);
 		mainScroll.setViewportView(marksTable);
