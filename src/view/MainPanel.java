@@ -1,4 +1,4 @@
-package sp_client;
+package view;
 
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -8,6 +8,8 @@ import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
 
+import controller.MainController;
+import model.MainModel;
 import sp_entities.AuthData;
 import sp_entities.GroupStageMarks;
 import sp_entities.GroupSubjectMarks;
@@ -18,7 +20,7 @@ public class MainPanel extends JPanel {
 	private MainModel model;
 	private MainController controller;
 
-	private static final int PANEL_X = 600, PANEL_Y = 400;
+	private static final int PANEL_X = 800, PANEL_Y = 600;
 	private static final int TOP_PANEL_Y = 100;
 	private JPanel topPanel;
 	private JPanel historyPanel;
@@ -58,6 +60,7 @@ public class MainPanel extends JPanel {
 		this.add(topPanel);
 
 		mainList = new JList<String>(mainListModel);
+		mainList.setFixedCellHeight(PANEL_Y/15);
 		mainList.addMouseListener(controller);
 		mainScroll = new JScrollPane(mainList);
 		mainScroll.setPreferredSize(new Dimension(PANEL_X-10, PANEL_Y
@@ -83,8 +86,6 @@ public class MainPanel extends JPanel {
 			System.out.println("switch main scroll to list");
 			mainScroll.setViewportView(mainList);
 		}
-//		mainScroll.revalidate();
-//		mainScroll.repaint();
 		mainListModel.removeAllElements();
 		for (String s : data) {
 			mainListModel.addElement(s);

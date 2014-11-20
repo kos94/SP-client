@@ -1,8 +1,8 @@
-package sp_client;
+package model;
 
 import java.util.Collections;
 
-import sp_client.MainModel.MainEvent;
+import model.MainModel.MainEvent;
 import sp_entities.*;
 import sp_server.Server;
 

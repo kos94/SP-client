@@ -1,9 +1,10 @@
-package sp_client;
+package view;
 
 import javax.swing.*;
 import javax.swing.text.*;
 
-import sp_client.MainModel.MainEvent;
+import controller.MainController;
+import model.MainModel;
 import sp_entities.AuthData;
 
 import java.awt.*;

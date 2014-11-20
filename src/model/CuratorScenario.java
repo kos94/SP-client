@@ -1,8 +1,8 @@
-package sp_client;
+package model;
 
 import java.util.ArrayList;
 
-import sp_client.MainModel.MainEvent;
+import model.MainModel.MainEvent;
 import sp_entities.GroupStageMarks;
 import sp_entities.GroupSubjectMarks;
 import sp_entities.Semester;

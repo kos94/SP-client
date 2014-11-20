@@ -1,8 +1,8 @@
-package sp_client;
+package model;
 
 import java.util.ArrayList;
 
-import sp_client.MainModel.MainEvent;
+import model.MainModel.MainEvent;
 import sp_entities.GroupStageMarks;
 import sp_entities.GroupSubjectMarks;
 import sp_entities.Semester;
@@ -45,8 +45,6 @@ public class DepWorkerScenario extends UserScenario {
 			if(ind < 3) {
 				curStage = ind + 1;
 				String xmlMarks = server.getStageMarks(idSession, curGroup, curSemester, curStage);
-				System.out.println(idSession + " " + curGroup + " " + curSemester + " " + curStage);
-				System.out.println("STAGE MARKS: " + xmlMarks);
 				marks = (GroupStageMarks) XMLSerializer
 						.xmlToObject(xmlMarks, GroupStageMarks.class);
 				goToEvent(MainEvent.MARKS);

@@ -1,4 +1,4 @@
-package sp_client;
+package view;
 
 import java.awt.Component;
 
@@ -153,7 +153,7 @@ public class MarksTable extends JTable {
 		} else if(m instanceof StudentSemMarks) {
 			setModel(new StudentMarksModel((StudentSemMarks)m));
 		}
-		adjustColumnSizes(0);
+		adjustColumnSizes(5);
 	}
 	
 	@Override

@@ -1,4 +1,4 @@
-package sp_client;
+package model;
 
 import java.util.*;
 

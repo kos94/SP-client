@@ -1,6 +1,6 @@
-package sp_client;
+package model;
 
-import sp_client.MainModel.MainEvent;
+import model.MainModel.MainEvent;
 import sp_entities.GroupSubjectMarks;
 import sp_entities.Semester;
 import sp_entities.Semesters;

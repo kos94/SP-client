@@ -3,7 +3,9 @@ package sp_client;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
+import model.MainModel;
 import sp_entities.UserRole;
+import view.MainView;
 
 public class ClientMain {
 	public static void main(String[] args) {
