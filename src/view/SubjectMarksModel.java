@@ -3,7 +3,7 @@ package view;
 import javax.swing.table.AbstractTableModel;
 
 import sp_entities.GroupSubjectMarks;
-import sp_entities.StudentMarks;
+import sp_entities.GroupSubjectMarks.StudentSubjMarks;;
 
 public class SubjectMarksModel extends MarksTableModel {
 	private GroupSubjectMarks marks;
@@ -31,12 +31,13 @@ public class SubjectMarksModel extends MarksTableModel {
 			} else if (row == marksNum+1) {
 				if( col == 0) return "Средний балл: ";
 				float m = marks.getAvgMark(col-1);
-				return (m == -1.0f)? "" : m;
+				System.out.println("AVG [" + (col-1) + "]: " + m);
+				return (m == -1)? "" : m;
 			}
 		}
-		StudentMarks sm = marks.getStudentMark(row);
+		StudentSubjMarks sm = marks.getStudentMark(row);
 		if(col == 0) return sm.student;
-		byte m = sm.marks.get(col-1);
+		byte m = sm.marks[col-1];
 		return (m == -1)? "" : m;
 	}
 	

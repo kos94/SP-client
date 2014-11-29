@@ -1,7 +1,7 @@
 package view;
 
 import sp_entities.GroupStageMarks;
-import sp_entities.StudentMarks;
+import sp_entities.GroupStageMarks.StudentStageMarks;
 
 public class StageMarksModel extends MarksTableModel {
 	private GroupStageMarks marks;
@@ -22,7 +22,7 @@ public class StageMarksModel extends MarksTableModel {
 	public Object getValueAt(int row, int col) {
 		int nSubj = marks.getSubjects().size();
 		int nStud = marks.getStudentsNumber();
-		StudentMarks sm = marks.getStudentMark(row);
+		StudentStageMarks sm = marks.getStudentMark(row);
 		if(col >= nSubj + 1 && row >= nStud) return "";
 		if(col == 0) {
 			if(row == nStud) return "Долгов: ";
@@ -36,12 +36,13 @@ public class StageMarksModel extends MarksTableModel {
 				return marks.getSubjAvg().get(col-1);
 			}
 			if(col == nSubj + 1) {
-				return marks.getStudentDebts().get(row);
+				return marks.getStudentDebts(row);
 			}
 			if(col == nSubj + 2) {
-				return marks.getStudentAvg().get(row);
+				return marks.getStudentAvg(row);
 			}
-			return sm.marks.get(col-1);
+			int mark = sm.marks.get(col-1);
+			return (mark == -1)? "" : mark;
 		}
 	}
 	

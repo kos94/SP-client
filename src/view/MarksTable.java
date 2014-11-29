@@ -14,40 +14,6 @@ import sp_entities.IMarks;
 import sp_entities.StudentSemMarks;
 import sp_entities.SubjectMarks;
 
-class StudentMarksModel extends MarksTableModel {
-	private StudentSemMarks marks;
-	private final static String[] COL_NAMES = {"Предмет", "1-й модуль", "2-й модуль", "Итог"};
-	public StudentMarksModel(StudentSemMarks marks) {
-		this.marks = marks;
-	}
-	@Override
-	public int getColumnCount() {
-		return 4;
-	}
-
-	@Override
-	public int getRowCount() {
-		return marks.getSubjectsNumber();
-	}
-
-	@Override
-	public Object getValueAt(int row, int col) {
-		SubjectMarks m = marks.getSubjectMarks(row);
-		if(col == 0) return m.subj;
-		else return m.marks.get(col-1);
-	}
-	
-	@Override
-	public String getColumnName(int col) {
-		return COL_NAMES[col];
-	}
-	@Override
-	public boolean isNeedToHighlight(int row, int col) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-}
-
 public class MarksTable extends JTable {
 	private final Font boldFont = new Font("Verdana", Font.BOLD, 12);
 	private final Font plainFont = new Font("Verdana", Font.PLAIN, 12);
