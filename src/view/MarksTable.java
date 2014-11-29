@@ -1,85 +1,20 @@
 package view;
 
 import java.awt.Component;
+import java.awt.Font;
 
 import javax.swing.JTable;
-import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableColumnModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
-import javax.swing.table.TableColumnModel;
-import javax.swing.table.TableModel;
 
 import sp_entities.GroupStageMarks;
 import sp_entities.GroupSubjectMarks;
 import sp_entities.IMarks;
-import sp_entities.StudentMarks;
 import sp_entities.StudentSemMarks;
 import sp_entities.SubjectMarks;
 
-class SubjectMarksModel extends AbstractTableModel {
-	private GroupSubjectMarks marks;
-	private final static String[] COL_NAMES = {"Студент", "1-й модуль", "2-й модуль", "Итог"};
-	
-	public SubjectMarksModel(GroupSubjectMarks marks) {
-		this.marks = marks;
-	}
-	@Override
-	public int getColumnCount() { return 4; }
-
-	@Override
-	public int getRowCount() {
-		return marks.getMarksNumber();
-	}
-
-	@Override
-	public Object getValueAt(int row, int col) {
-		StudentMarks sm = marks.getStudentMark(row);
-		if(col == 0) return sm.student;
-		else return sm.marks.get(col-1);
-	}
-	
-	@Override
-	public String getColumnName(int col) {
-		return COL_NAMES[col];
-	}
-}
-
-class StageMarksModel extends AbstractTableModel {
-	private GroupStageMarks marks;
-	public StageMarksModel(GroupStageMarks marks) {
-		this.marks = marks;
-	}
-	@Override
-	public int getColumnCount() {
-		System.out.println("get column count: " + marks.getSubjects().size()+1);
-		return marks.getSubjects().size() + 1;
-	}
-
-	@Override
-	public int getRowCount() {
-		return marks.getStudentsNumber();
-	}
-
-	@Override
-	public Object getValueAt(int row, int col) {
-		StudentMarks sm = marks.getStudentMark(row);
-		if(col == 0) return sm.student;
-		else {
-			System.out.println("get value called, col: " + col);
-			System.out.println("marks size: " + sm.marks.size());
-			return sm.marks.get(col-1);
-		}
-	}
-	
-	@Override
-	public String getColumnName(int col) {
-		if(col == 0) return "Студент";
-		return marks.getSubjects().get(col-1);
-	}
-}
-
-class StudentMarksModel extends AbstractTableModel {
+class StudentMarksModel extends MarksTableModel {
 	private StudentSemMarks marks;
 	private final static String[] COL_NAMES = {"Предмет", "1-й модуль", "2-й модуль", "Итог"};
 	public StudentMarksModel(StudentSemMarks marks) {
@@ -106,9 +41,18 @@ class StudentMarksModel extends AbstractTableModel {
 	public String getColumnName(int col) {
 		return COL_NAMES[col];
 	}
+	@Override
+	public boolean isNeedToHighlight(int row, int col) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }
 
 public class MarksTable extends JTable {
+	private final Font boldFont = new Font("Verdana", Font.BOLD, 12);
+	private final Font plainFont = new Font("Verdana", Font.PLAIN, 12);
+	
+	private MarksTableModel model;
 	public MarksTable() {
 		super();
 		getTableHeader().setReorderingAllowed(false);
@@ -146,19 +90,31 @@ public class MarksTable extends JTable {
     }
 	
 	public void setContent(IMarks m) {
+		System.out.println("set content");
 		if(m instanceof GroupSubjectMarks) {
-			setModel(new SubjectMarksModel((GroupSubjectMarks)m));
+			model = new SubjectMarksModel((GroupSubjectMarks)m);
 		} else if(m instanceof GroupStageMarks) {
-			setModel(new StageMarksModel((GroupStageMarks)m));
+			model = new StageMarksModel((GroupStageMarks)m);
 		} else if(m instanceof StudentSemMarks) {
-			setModel(new StudentMarksModel((StudentSemMarks)m));
+			model = new StudentMarksModel((StudentSemMarks)m);
 		}
+		setModel(model);
 		adjustColumnSizes(5);
 	}
 	
 	@Override
-	public boolean getScrollableTracksViewportWidth()
-    {
+	public boolean getScrollableTracksViewportWidth() {
         return getPreferredSize().width < getParent().getWidth();
     }
+	
+	@Override 
+	public Component prepareRenderer(
+			TableCellRenderer renderer, int row, int col) {
+		Component c = super.prepareRenderer(renderer, row, col);
+		if(model.isNeedToHighlight(row, col)) 
+			c.setFont( boldFont );
+		else 
+			c.setFont( plainFont );
+		return c;
+	}
 }
