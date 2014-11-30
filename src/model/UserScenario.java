@@ -14,6 +14,7 @@ public abstract class UserScenario {
 	protected Stack<MainEvent> history;
 	protected MainEvent curEvent;
 	protected String curSemester;
+	protected String curFlow;
 	protected String curSubject;
 	protected String curGroup;
 	protected int curStage;
@@ -21,6 +22,7 @@ public abstract class UserScenario {
 	protected Semesters semesters;
 	protected List<String> subjects;
 	protected List<String> groups;
+	protected List<String> flows;
 	protected IMarks marks;
 	
 	public UserScenario(Server server, String idSession) {

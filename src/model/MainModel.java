@@ -12,8 +12,10 @@ public class MainModel extends Observable {
 		AUTHORIZATION_FAIL("Ошибка авторизации"),
 		ROLES("Роли"),
 		SEMESTERS("Семестры"),
+		FLOW_OR_GROUP_MENU("Группы/потоки"),
 		SUBJECTS("Предметы"), 
 		GROUPS("Группы"), 
+		FLOWS("Потоки"),
 		GROUP_MENU("Меню группы"),
 		MARKS("Оценки");
 		
@@ -129,6 +131,7 @@ public class MainModel extends Observable {
 	}
 	public List<String> getSubjects() { return scenario.subjects; }
 	public List<String> getGroups() { return scenario.groups; }
+	public List<String> getFlows() { return scenario.flows; }
 	public List<String> getGroupMenu() {
 		List<String> menu = new ArrayList<>();
 		menu.add("Оценки за 1-й модуль");
@@ -138,4 +141,11 @@ public class MainModel extends Observable {
 		return menu;
 	}
 	public IMarks getMarks() { return scenario.marks; }
+
+	public List<String> getFlowOrGroupMenu() {
+		List<String> menu = new ArrayList<>();
+		menu.add("Группы");
+		menu.add("Потоки");
+		return menu;
+	}
 }

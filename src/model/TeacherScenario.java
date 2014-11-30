@@ -22,6 +22,7 @@ public class TeacherScenario extends UserScenario {
 
 	@Override
 	public void setListIndex(int ind) {
+		assert(ind >= 0);
 		switch(curEvent) {
 		case SEMESTERS:
 			assert(ind < semesters.getSemesters().size());
@@ -33,8 +34,19 @@ public class TeacherScenario extends UserScenario {
 		case SUBJECTS:
 			assert(ind < subjects.size());
 			curSubject = subjects.get(ind);
-			groups = server.getTeacherGroups(idSession, curSemester, curSubject);
-			goToEvent(MainEvent.GROUPS);
+			goToEvent(MainEvent.FLOW_OR_GROUP_MENU);
+			break;
+		case FLOW_OR_GROUP_MENU:
+			assert(ind < 2);
+			boolean isFlowScenario = (ind == 1);
+			if(isFlowScenario) {
+				flows = server.getTeacherFlows(idSession, curSemester, curSubject);
+				goToEvent(MainEvent.FLOWS);
+			} else {
+				groups = server.getTeacherGroups(idSession, curSemester, curSubject);
+				goToEvent(MainEvent.GROUPS);
+			}
+			
 			break;
 		case GROUPS:
 			assert(ind < groups.size());
@@ -43,6 +55,15 @@ public class TeacherScenario extends UserScenario {
 			marks = (GroupSubjectMarks) XMLSerializer
 					.xmlToObject(xmlMarks, GroupSubjectMarks.class);
 			goToEvent(MainEvent.MARKS);
+			break;
+		case FLOWS:
+			assert(ind < flows.size());
+			curFlow = flows.get(ind);
+			xmlMarks = server.getFlowSubjectMarks(idSession, curFlow, curSubject);
+			marks = (GroupSubjectMarks) XMLSerializer
+					.xmlToObject(xmlMarks, GroupSubjectMarks.class);
+			goToEvent(MainEvent.MARKS);
+			break;
 		}
 	}
 
