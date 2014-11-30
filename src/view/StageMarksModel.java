@@ -30,16 +30,20 @@ public class StageMarksModel extends MarksTableModel {
 			return sm.student;
 		} else {
 			if(row == nStud) {
-				return marks.getSubjDebts().get(col-1);
+				byte d = marks.getSubjDebts().get(col-1);
+				return (d == -1)? "" : d;
 			}
 			if(row == nStud + 1) {
-				return marks.getSubjAvg().get(col-1);
+				float avg = marks.getSubjAvg().get(col-1);
+				return (avg == -1)? "" : avg;
 			}
 			if(col == nSubj + 1) {
-				return marks.getStudentDebts(row);
+				byte d = marks.getStudentDebts(row);
+				return (d == -1)? "" : d;
 			}
 			if(col == nSubj + 2) {
-				return marks.getStudentAvg(row);
+				float avg = marks.getStudentAvg(row);
+				return (avg == -1)? "" : avg;
 			}
 			int mark = sm.marks.get(col-1);
 			return (mark == -1)? "" : mark;

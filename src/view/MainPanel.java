@@ -2,11 +2,15 @@ package view;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
+import java.awt.Point;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -14,6 +18,10 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
+import javax.swing.border.TitledBorder;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
 
@@ -39,9 +47,8 @@ public class MainPanel extends JPanel {
 	private Image arrowImage;
 	private int hSize;
 	
-	private JList<String> mainList;
+	private MyList mainList;
 	private JScrollPane mainScroll;
-	private DefaultListModel<String> mainListModel;
 	private MarksTable marksTable;
 	
 	private JPanel bottomPanel;
@@ -53,7 +60,6 @@ public class MainPanel extends JPanel {
 		this.model = model;
 		this.controller = controller;
 		hSize = 0;
-		mainListModel = new DefaultListModel<String>();
 		marksTable = new MarksTable();
 		
 		try {
@@ -87,7 +93,7 @@ public class MainPanel extends JPanel {
 
 		this.add(topPanel);
 
-		mainList = new JList<String>(mainListModel);
+		mainList = new MyList();
 		mainList.setFixedCellHeight(PANEL_Y/15);
 		mainList.addMouseListener(controller);
 		mainScroll = new JScrollPane(mainList);
@@ -132,15 +138,10 @@ public class MainPanel extends JPanel {
 	}
 
 	public void setListData(List<String> data) {
-		System.out.println("set list data");
 		if(!mainScroll.getViewport().getView().equals(mainList)) {
-			System.out.println("switch main scroll to list");
 			mainScroll.setViewportView(mainList);
 		}
-		mainListModel.removeAllElements();
-		for (String s : data) {
-			mainListModel.addElement(s);
-		}
+		mainList.setListData(data);
 	}
 
 	public void addEventToHistory(String eventName) {
