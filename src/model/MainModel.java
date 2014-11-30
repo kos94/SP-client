@@ -13,9 +13,8 @@ public class MainModel extends Observable {
 		ROLES("Роли"),
 		SEMESTERS("Семестры"),
 		FLOW_OR_GROUP_MENU("Группы/потоки"),
-		SUBJECTS("Предметы"), 
+		GROUP_SUBJECTS("Предметы"), 
 		GROUPS("Группы"), 
-		FLOWS("Потоки"),
 		GROUP_MENU("Меню группы"),
 		MARKS("Оценки");
 		
@@ -131,7 +130,6 @@ public class MainModel extends Observable {
 	}
 	public List<String> getSubjects() { return scenario.subjects; }
 	public List<String> getGroups() { return scenario.groups; }
-	public List<String> getFlows() { return scenario.flows; }
 	public List<String> getGroupMenu() {
 		List<String> menu = new ArrayList<>();
 		menu.add("Оценки за 1-й модуль");

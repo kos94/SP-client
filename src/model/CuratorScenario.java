@@ -51,10 +51,10 @@ public class CuratorScenario extends UserScenario {
 				goToEvent(MainEvent.MARKS);
 			} else {
 				subjects = server.getGroupSubjects(idSession, curSemester, curGroup);
-				goToEvent(MainEvent.SUBJECTS);
+				goToEvent(MainEvent.GROUP_SUBJECTS);
 			}
 			break;
-		case SUBJECTS:
+		case GROUP_SUBJECTS:
 			assert(ind < subjects.size());
 			curSubject = subjects.get(ind);
 			String xmlMarks = server.getSubjectMarks(idSession, curGroup, curSubject);

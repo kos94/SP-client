@@ -164,14 +164,11 @@ public class MainView extends JFrame implements Observer {
 		case FLOW_OR_GROUP_MENU:
 			mainPanel.setListData(model.getFlowOrGroupMenu());
 			break;
-		case SUBJECTS:
+		case GROUP_SUBJECTS:
 			mainPanel.setListData(model.getSubjects());
 			break;
 		case GROUPS:
 			mainPanel.setListData(model.getGroups());
-			break;
-		case FLOWS:
-			mainPanel.setListData(model.getFlows());
 			break;
 		case GROUP_MENU:
 			mainPanel.setListData(model.getGroupMenu());

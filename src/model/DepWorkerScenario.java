@@ -22,7 +22,7 @@ public class DepWorkerScenario extends UserScenario {
 		String semStr = server.getDepSemesters(idSession);
 		System.out.println(semStr);
 		semesters = (Semesters) XMLSerializer.xmlToObject(semStr, Semesters.class);
-		curEvent = MainEvent.SEMESTERS;
+		goToEvent(MainEvent.SEMESTERS);
 	}
 
 	@Override
@@ -32,7 +32,16 @@ public class DepWorkerScenario extends UserScenario {
 			assert(ind < semesters.getSemesters().size());
 			Semester sem = semesters.getSemesters().get(ind);
 			curSemester = XMLSerializer.objectToXML(sem);
-			groups = server.getDepGroups(idSession, curSemester);
+			goToEvent(MainEvent.FLOW_OR_GROUP_MENU);
+			break;
+		case FLOW_OR_GROUP_MENU:
+			assert(ind < 2);
+			isFlow = (ind == 1);
+			if(isFlow) {
+				groups = server.getDepFlows(idSession, curSemester);
+			} else {
+				groups = server.getDepGroups(idSession, curSemester);
+			}
 			goToEvent(MainEvent.GROUPS);
 			break;
 		case GROUPS:
@@ -44,19 +53,33 @@ public class DepWorkerScenario extends UserScenario {
 			assert(ind < 4);
 			if(ind < 3) {
 				curStage = ind + 1;
-				String xmlMarks = server.getStageMarks(idSession, curGroup, curSemester, curStage);
+				String xmlMarks;
+				if(isFlow) {
+					xmlMarks = server.getFlowStageMarks(idSession, curGroup, curSemester, curStage);
+				} else {
+					xmlMarks = server.getStageMarks(idSession, curGroup, curSemester, curStage);
+				}
 				marks = (GroupStageMarks) XMLSerializer
 						.xmlToObject(xmlMarks, GroupStageMarks.class);
 				goToEvent(MainEvent.MARKS);
 			} else {
-				subjects = server.getGroupSubjects(idSession, curSemester, curGroup);
-				goToEvent(MainEvent.SUBJECTS);
+				if(isFlow) {
+					subjects = server.getFlowSubjects(idSession, curSemester, curGroup);
+				} else {
+					subjects = server.getGroupSubjects(idSession, curSemester, curGroup);
+				}
+				goToEvent(MainEvent.GROUP_SUBJECTS);
 			}
 			break;
-		case SUBJECTS:
+		case GROUP_SUBJECTS:
 			assert(ind < subjects.size());
 			curSubject = subjects.get(ind);
-			String xmlMarks = server.getSubjectMarks(idSession, curGroup, curSubject);
+			String xmlMarks;
+			if(isFlow) {
+				xmlMarks = server.getFlowSubjectMarks(idSession, curGroup, curSubject);
+			} else {
+				xmlMarks = server.getSubjectMarks(idSession, curGroup, curSubject);
+			}
 			marks = (GroupSubjectMarks) XMLSerializer
 					.xmlToObject(xmlMarks, GroupSubjectMarks.class);
 			goToEvent(MainEvent.MARKS);
