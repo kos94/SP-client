@@ -9,6 +9,8 @@ import sp_entities.AuthData;
 
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.io.IOException;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -58,13 +60,13 @@ class LoginPanel extends JPanel {
 		c.gridwidth = 1;
 		add(new JLabel("ID: "), c);
 		c.gridx = 1;
-		add(login, c);
+		add(login, c); /* TODO DEL */ login.setText("4");
 
 		c.gridx = 0;
 		c.gridy++;
 		add(new JLabel("Пароль: "), c);
 		c.gridx = 1;
-		add(password, c);
+		add(password, c); /* TODO DEL */ password.setText("c956");
 
 		c.insets = new Insets(0, 0, 0, 0);
 		c.gridx = 0;
@@ -91,6 +93,7 @@ public class MainView extends JFrame implements Observer {
 	//TODO maybe delete (replace with switch (source)
 	public static final String LOGIN_ACTION_COMMAND = "login";
 	public static final String HISTORY_BUTTON_COMMAND = "historybutton";
+	public static final String BACK_BUTTON_COMMAND = "back";
 	private MainModel model;
 	private MainController controller;
 	private LoginPanel loginPanel;
@@ -99,12 +102,14 @@ public class MainView extends JFrame implements Observer {
 	public MainView(MainModel m) {
 		super("Анализ успеваемости");
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
 		model = m;
 		model.addObserver(this);
 		controller = new MainController(model, this);
-	}
 
+		KeyboardFocusManager.getCurrentKeyboardFocusManager()
+				.addKeyEventDispatcher(controller);
+	}
+	
 	private void placeToCenter() {
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 		this.setLocation(dim.width / 2 - this.getSize().width / 2, dim.height

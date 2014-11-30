@@ -33,25 +33,29 @@ public abstract class UserScenario {
 	}
 	
 	public abstract void setListIndex(int ind);
+	
 	protected abstract void getSemesters();
 	
 	public MainEvent getCurEvent() { return curEvent; }
+	
 	public void goBack(int historyPos) {
-		System.out.println("stack before come back: ");
-		for(int i=0; i<history.size(); i++) {
-			System.out.println(history.get(i));
-		}
-		System.out.println("want go back to " + history.get(historyPos));
-		
 		int diff = history.size() - historyPos - 1;
 		if(diff <= 0) return;
 		while(--diff >= 0) {
 			history.pop();
 		}
 		curEvent = history.peek();
-		//TODO smth about choosing role
 	}
+	
+	public void goBack() {
+		if(history.size() >= 2) {
+			history.pop();
+			curEvent = history.peek();
+		}
+	}
+	
 	public int getHistoryPosition() { return history.size()-1; }
+	
 	protected void goToEvent(MainEvent e) { 
 		curEvent = e;
 		history.push(curEvent);

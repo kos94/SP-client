@@ -9,6 +9,7 @@ import view.MainView;
 
 public class ClientMain {
 	public static void main(String[] args) {
+		
 		try {
 			MainModel model = new MainModel();
 			MainView view = new MainView(model);

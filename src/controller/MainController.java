@@ -1,8 +1,10 @@
 package controller;
 
 import java.awt.Component;
+import java.awt.KeyEventDispatcher;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.Observable;
@@ -13,7 +15,7 @@ import javax.swing.JList;
 import view.MainView;
 import model.MainModel;
 
-public class MainController implements ActionListener, MouseListener, Observer {
+public class MainController implements ActionListener, MouseListener, Observer, KeyEventDispatcher {
 	private final MainModel model;
 	private final MainView view;
 	
@@ -62,11 +64,23 @@ public class MainController implements ActionListener, MouseListener, Observer {
 			model.login(id, pass);
 			
 			System.out.println("login confirmation: " + view.getLogin() + " " + view.getPassword());
+		} else if(command.equals(MainView.BACK_BUTTON_COMMAND)) {
+			model.goBack();
 		} else if(command.matches("(" + MainView.HISTORY_BUTTON_COMMAND + ")[0-9]+")) {
 			String strNumber = command.substring(
 					MainView.HISTORY_BUTTON_COMMAND.length());
 			int number = Integer.parseInt(strNumber);
 			model.goBack(number);
 		}
+	}
+	@Override
+	public boolean dispatchKeyEvent(KeyEvent e) {
+		if (e.getID() != KeyEvent.KEY_PRESSED)
+            return false;
+		int code = e.getKeyCode();
+		if(code == KeyEvent.VK_BACK_SPACE) {
+			model.goBack();
+		}
+		return false;
 	}
 }

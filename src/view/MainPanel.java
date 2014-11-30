@@ -1,9 +1,18 @@
 package view;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
@@ -21,31 +30,50 @@ public class MainPanel extends JPanel {
 	private MainController controller;
 
 	private static final int PANEL_X = 800, PANEL_Y = 600;
-	private static final int TOP_PANEL_Y = 100;
+	private static final int TOP_PANEL_Y = 100, BOTTOM_PANEL_Y = 50;
+	private static final int TOP_HOR_MARGIN = 10 + PANEL_X/30;;
+	private static final int SCROLL_HOR_MARGIN = TOP_HOR_MARGIN;
+	private static final int BOTTOM_HOR_MARGIN = SCROLL_HOR_MARGIN;
 	private JPanel topPanel;
 	private JPanel historyPanel;
+	private Image arrowImage;
 	private int hSize;
+	
 	private JList<String> mainList;
 	private JScrollPane mainScroll;
 	private DefaultListModel<String> mainListModel;
 	private MarksTable marksTable;
+	
+	private JPanel bottomPanel;
+	private JButton backButton;
+	private JButton nextButton;
 
 	public MainPanel(MainModel model, MainController controller) {
-		super();
+		super(new FlowLayout(FlowLayout.CENTER, 0, 0));
 		this.model = model;
 		this.controller = controller;
 		hSize = 0;
 		mainListModel = new DefaultListModel<String>();
 		marksTable = new MarksTable();
 		
-		historyPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		historyPanel.setPreferredSize(new Dimension(PANEL_X, TOP_PANEL_Y));
+		try {
+			arrowImage = ImageIO.read(new File("history_arrow.png"))
+					.getScaledInstance(20, 20, java.awt.Image.SCALE_AREA_AVERAGING);
+		} catch (IOException e) {
+			System.out.println("Error! Arrow icon not found");
+		}
+		File currentDir = new File("");
+		System.out.println( currentDir.getAbsolutePath() );
+		
+		historyPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 15));
+		historyPanel.setPreferredSize(
+				new Dimension(PANEL_X - 2*TOP_HOR_MARGIN, TOP_PANEL_Y));
 	}
 	
 	public void showMainPage(AuthData data) {
 		this.removeAll();
 
-		topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		topPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
 		topPanel.setPreferredSize(new Dimension(PANEL_X, TOP_PANEL_Y));
 		topPanel.add(new JLabel("Имя: " + data.getName(), SwingConstants.LEFT));
 		String dep = data.getDepartment();
@@ -63,12 +91,35 @@ public class MainPanel extends JPanel {
 		mainList.setFixedCellHeight(PANEL_Y/15);
 		mainList.addMouseListener(controller);
 		mainScroll = new JScrollPane(mainList);
-		mainScroll.setPreferredSize(new Dimension(PANEL_X-10, PANEL_Y
-				- TOP_PANEL_Y-10));
+		mainScroll.setPreferredSize(
+				new Dimension(PANEL_X - SCROLL_HOR_MARGIN*2, 
+						PANEL_Y - TOP_PANEL_Y - BOTTOM_PANEL_Y));
 		setListData(model.getRoles());
-
+		this.add(mainScroll);
+		
+		bottomPanel = new JPanel(new GridBagLayout());
+		bottomPanel.setPreferredSize(
+				new Dimension(PANEL_X - 2*BOTTOM_HOR_MARGIN, BOTTOM_PANEL_Y));
+		GridBagConstraints c = new GridBagConstraints();
+		c.anchor = GridBagConstraints.LINE_START;
+		c.gridx = c.gridy = 0;
+		c.weightx = 1;
+		backButton = new JButton("Назад");
+		backButton.setActionCommand(MainView.BACK_BUTTON_COMMAND);
+		backButton.addActionListener(controller);
+		backButton.setEnabled(false);
+		bottomPanel.add(backButton, c);
+		
+		c.gridx = 1;
+		c.anchor = GridBagConstraints.LINE_END;
+		nextButton = new JButton("Далее");
+		nextButton.setVisible(false); //TODO DELETE OR SHOW
+		bottomPanel.add(nextButton, c);
+		
+		this.add(bottomPanel);
+		
 		setPreferredSize(new Dimension(PANEL_X, PANEL_Y));
-		add(mainScroll);
+		
 		revalidate();
 		repaint();
 	}
@@ -93,9 +144,16 @@ public class MainPanel extends JPanel {
 	}
 
 	public void addEventToHistory(String eventName) {
+		System.out.println("add event" + eventName);
+		
 		JButton button = new JButton(eventName);
 		button.setActionCommand(MainView.HISTORY_BUTTON_COMMAND + (hSize++));
 		button.addActionListener(controller);
+		if(hSize > 1) {
+			JLabel label = new JLabel(new ImageIcon(arrowImage));
+			historyPanel.add(label);
+			backButton.setEnabled(true);
+		}
 		historyPanel.add(button);
 		historyPanel.revalidate();
 		System.out.println("add event " + eventName + " : " + MainView.HISTORY_BUTTON_COMMAND + (hSize-1));
@@ -104,8 +162,12 @@ public class MainPanel extends JPanel {
 	public void setHistoryPosition(int pos) {
 		assert (pos < hSize);
 		while (hSize > pos + 1) {
-			historyPanel.remove(pos + 1);
+			historyPanel.remove(2*pos + 1);
+			historyPanel.remove(2*pos + 1);
 			hSize--;
+		}
+		if(hSize == 1) {
+			backButton.setEnabled(false);
 		}
 		historyPanel.revalidate();
 		historyPanel.repaint();

@@ -101,12 +101,19 @@ public class MainModel extends Observable {
 	}
 
 	public void goBack(int historyPos) {
-		System.out.println("model go back");
 		newEvent = false;
 		scenario.goBack(historyPos);
 		curEvent = scenario.getCurEvent();
+		setChanged();;
+		notifyObservers(curEvent);
+	}
+	
+	public void goBack() {
+		if(scenario == null) return;
+		newEvent = false;
+		scenario.goBack();
+		curEvent = scenario.getCurEvent();
 		setChanged();
-		System.out.println("curEvent: " + scenario.getCurEvent());
 		notifyObservers(curEvent);
 	}
 	
