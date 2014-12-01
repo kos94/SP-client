@@ -1,6 +1,7 @@
 package view;
 
 import javax.swing.table.AbstractTableModel;
+
 import sp_entities.IMarks;
 
 public abstract class MarksTableModel extends AbstractTableModel {

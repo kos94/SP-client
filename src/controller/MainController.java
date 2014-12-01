@@ -1,19 +1,14 @@
 package controller;
 
-import java.awt.Component;
 import java.awt.KeyEventDispatcher;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
 import java.util.Observable;
 import java.util.Observer;
 
 import javax.swing.JList;
 
-import view.MainView;
 import model.MainModel;
+import view.MainView;
 
 public class MainController implements ActionListener, MouseListener, Observer, KeyEventDispatcher {
 	private final MainModel model;
@@ -46,9 +41,7 @@ public class MainController implements ActionListener, MouseListener, Observer, 
 	}
 	
 	@Override
-	public void update(Observable o, Object obj) {
-		// TODO Auto-generated method stub
-	}
+	public void update(Observable o, Object obj) {}
 
 	@Override
 	public void actionPerformed(ActionEvent evt) {

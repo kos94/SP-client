@@ -2,7 +2,6 @@ package view;
 
 import sp_entities.GroupStageMarks;
 import sp_entities.GroupStageMarks.StudentStageMarks;
-import sp_entities.IMarks;
 
 public class StageMarksModel extends MarksTableModel {
 	private GroupStageMarks marks;

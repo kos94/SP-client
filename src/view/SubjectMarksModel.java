@@ -1,9 +1,7 @@
 package view;
 
-import javax.swing.table.AbstractTableModel;
-
 import sp_entities.GroupSubjectMarks;
-import sp_entities.GroupSubjectMarks.StudentSubjMarks;;
+import sp_entities.GroupSubjectMarks.StudentSubjMarks;
 
 public class SubjectMarksModel extends MarksTableModel {
 	private GroupSubjectMarks marks;

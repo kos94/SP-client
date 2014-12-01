@@ -1,7 +1,10 @@
 package model;
 
 import model.MainModel.MainEvent;
-import sp_entities.*;
+import sp_entities.GroupSubjectMarks;
+import sp_entities.Semester;
+import sp_entities.Semesters;
+import sp_entities.XMLSerializer;
 import sp_server.Server;
 
 public class TeacherScenario extends UserScenario {

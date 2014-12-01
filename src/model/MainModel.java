@@ -5,7 +5,11 @@ import java.util.*;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-import sp_entities.*;
+import sp_entities.AuthData;
+import sp_entities.IMarks;
+import sp_entities.Semester;
+import sp_entities.UserRole;
+import sp_entities.XMLSerializer;
 import sp_server.Server;
 import sp_server.ServerService;
 import view.MainView;

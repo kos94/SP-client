@@ -1,16 +1,18 @@
 package view;
 
-import javax.swing.*;
-import javax.swing.text.*;
-
-import controller.MainController;
-import model.MainModel;
-import sp_entities.AuthData;
-
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.Observable;
 import java.util.Observer;
+
+import javax.swing.*;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.PlainDocument;
+
+import model.MainModel;
+import sp_entities.AuthData;
+import controller.MainController;
 
 class DigitsFieldDocument extends PlainDocument {
 	private int limit;

@@ -1,9 +1,6 @@
 package view;
 
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.Image;
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -11,10 +8,10 @@ import java.util.List;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
-import controller.MainController;
 import model.MainModel;
 import sp_entities.AuthData;
 import sp_entities.IMarks;
+import controller.MainController;
 
 public class MainPanel extends JPanel {
 	private MainModel model;
@@ -143,7 +140,6 @@ public class MainPanel extends JPanel {
 	}
 
 	public void showMarks(IMarks m) {
-		m.printMarks();
 		marksTable.setContent(m);
 		mainScroll.setViewportView(marksTable);
 		mainScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);

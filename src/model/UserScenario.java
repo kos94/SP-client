@@ -4,7 +4,8 @@ import java.util.List;
 import java.util.Stack;
 
 import model.MainModel.MainEvent;
-import sp_entities.*;
+import sp_entities.IMarks;
+import sp_entities.Semesters;
 import sp_server.Server;
 
 public abstract class UserScenario {

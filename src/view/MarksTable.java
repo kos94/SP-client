@@ -5,15 +5,12 @@ import java.awt.Component;
 import java.awt.Font;
 
 import javax.swing.JTable;
-import javax.swing.table.DefaultTableColumnModel;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
+import javax.swing.table.*;
 
 import sp_entities.GroupStageMarks;
 import sp_entities.GroupSubjectMarks;
 import sp_entities.IMarks;
 import sp_entities.StudentSemMarks;
-import sp_entities.SubjectMarks;
 
 public class MarksTable extends JTable {
 	private final Font boldFont = new Font("Verdana", Font.BOLD, 12);

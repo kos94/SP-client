@@ -1,7 +1,5 @@
 package model;
 
-import java.util.ArrayList;
-
 import model.MainModel.MainEvent;
 import sp_entities.GroupStageMarks;
 import sp_entities.GroupSubjectMarks;

@@ -1,7 +1,6 @@
 package model;
 
 import model.MainModel.MainEvent;
-import sp_entities.GroupSubjectMarks;
 import sp_entities.Semester;
 import sp_entities.Semesters;
 import sp_entities.StudentSemMarks;
@@ -17,7 +16,6 @@ public class StudentScenario extends UserScenario {
 	@Override
 	protected void getSemesters() {
 		String semStr = server.getStudentSemesters(idSession);
-		System.out.println(semStr);
 		semesters = (Semesters) XMLSerializer.xmlToObject(semStr, Semesters.class);
 		goToEvent(MainEvent.SEMESTERS);
 	}
