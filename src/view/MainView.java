@@ -109,12 +109,6 @@ public class MainView extends JFrame implements Observer {
 		KeyboardFocusManager.getCurrentKeyboardFocusManager()
 				.addKeyEventDispatcher(controller);	
 	}
-	
-//	public void placeToCenter() {
-//		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-//		this.setLocation(dim.width / 2 - this.getSize().width / 2, dim.height
-//				/ 2 - this.getSize().height / 2);
-//	}
 
 	public String getLogin() {
 		return loginPanel.getLogin();
@@ -127,13 +121,10 @@ public class MainView extends JFrame implements Observer {
 	@Override
 	public void update(Observable o, Object arg) {
 		MainModel.MainEvent event = (MainModel.MainEvent) arg;
-//		System.out.println("update on view" + event.name());
 		boolean newEvent = model.isNewEvent();
 		
 		switch (event) {
 		case AUTHORIZATION:
-			System.out.println("--> AUTH");
-			System.out.println("show dialog");
 			this.getContentPane().removeAll();
 			loginPanel = new LoginPanel(controller);
 			this.add(loginPanel);
@@ -142,13 +133,11 @@ public class MainView extends JFrame implements Observer {
 			this.setVisible(true);
 			break;
 		case AUTHORIZATION_FAIL:
-			System.out.println("--> AUTH FAIL");
 			JOptionPane.showMessageDialog(this,
 					"Неверная комбинация логин/пароль", "Ошибка",
 					JOptionPane.INFORMATION_MESSAGE);
 			return;
 		case ROLES:
-			System.out.println("--> ROLES");
 			AuthData data = model.getAuthData();
 			if(newEvent && mainPanel == null) {
 				this.getContentPane().removeAll();
@@ -162,6 +151,7 @@ public class MainView extends JFrame implements Observer {
 		case SEMESTERS:
 			if(newEvent) {
 				mainPanel.showHistoryPanel();
+				mainPanel.addEventToHistory("Главное меню");
 			}
 			mainPanel.setListData(model.getSemesters());
 			break;

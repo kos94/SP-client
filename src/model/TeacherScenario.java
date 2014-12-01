@@ -8,12 +8,10 @@ public class TeacherScenario extends UserScenario {
 
 	public TeacherScenario(Server server, String idSession) {
 		super(server, idSession);
-		System.out.println("teacher scenario constructor");
 	}
 
 	protected void getSemesters() {
 		String semStr = server.getTeacherSemesters(idSession);
-		System.out.println(semStr);
 		semesters = (Semesters) XMLSerializer.xmlToObject(semStr, Semesters.class);
 		goToEvent(MainEvent.SEMESTERS);
 	}

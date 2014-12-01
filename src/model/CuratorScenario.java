@@ -13,22 +13,18 @@ import sp_server.Server;
 public class CuratorScenario extends UserScenario {
 	public CuratorScenario(Server server, String idSession) {
 		super(server, idSession);
-		System.out.println("curator scenario constructor");
 	}
 	
 	@Override
 	protected void getSemesters() {
 		String semStr = server.getCuratorSemesters(idSession);
-		System.out.println(semStr);
 		semesters = (Semesters) XMLSerializer.xmlToObject(semStr, Semesters.class);
 		goToEvent(MainEvent.SEMESTERS);
 	}
 	@Override
 	public void setListIndex(int ind) {
-		assert(ind >= 0); //TODO delete or not delete
 		switch(curEvent) {
 		case SEMESTERS:
-			assert(ind < semesters.getSemesters().size());
 			Semester sem = semesters.getSemesters().get(ind);
 			curSemester = XMLSerializer.objectToXML(sem);
 			String group = server.getCuratorGroup(idSession, curSemester);
@@ -37,12 +33,10 @@ public class CuratorScenario extends UserScenario {
 			goToEvent(MainEvent.GROUPS);
 			break;
 		case GROUPS:
-			assert(ind < groups.size());
 			curGroup = groups.get(ind);
 			goToEvent(MainEvent.GROUP_MENU);
 			break;
 		case GROUP_MENU:
-			assert(ind < 4);
 			if(ind < 3) {
 				curStage = ind + 1;
 				String xmlMarks = server.getStageMarks(idSession, curGroup, curSemester, curStage);

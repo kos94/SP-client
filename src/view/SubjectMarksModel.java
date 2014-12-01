@@ -26,19 +26,18 @@ public class SubjectMarksModel extends MarksTableModel {
 		if(row > marksNum - 1) {
 			if(row == marksNum) {
 				if (col == 0) return "Долгов: ";
-				byte d = marks.getDebtCount(col-1);
-				return (d == -1)? "" : d; 
+				byte d = marks.getDebtCount(col - 1);
+				return (d == ABSENT)? "" : d; 
 			} else if (row == marksNum+1) {
 				if( col == 0) return "Средний балл: ";
-				float m = marks.getAvgMark(col-1);
-				System.out.println("AVG [" + (col-1) + "]: " + m);
-				return (m == -1)? "" : m;
+				float m = marks.getAvgMark(col - 1);
+				return (m == ABSENT)? "" : m;
 			}
 		}
 		StudentSubjMarks sm = marks.getStudentMark(row);
 		if(col == 0) return sm.student;
-		byte m = sm.marks[col-1];
-		return (m == -1)? "" : m;
+		byte m = sm.marks[col - 1];
+		return (m == ABSENT)? "" : m;
 	}
 	
 	@Override
@@ -48,5 +47,11 @@ public class SubjectMarksModel extends MarksTableModel {
 	@Override
 	public boolean isNeedToHighlight(int row, int col) {
 		return (row >= marks.getMarksNumber());
+	}
+	@Override
+	public boolean isDebt(int row, int col) {
+		if(col == 0 || isNeedToHighlight(row, col)) return false;
+		int m = marks.getStudentMark(row).marks[col - 1];
+		return (m != ABSENT && m < MIN_MARK[col - 1]);
 	}
 }

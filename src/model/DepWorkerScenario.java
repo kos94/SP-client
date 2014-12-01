@@ -14,13 +14,11 @@ public class DepWorkerScenario extends UserScenario {
 
 	public DepWorkerScenario(Server server, String idSession) {
 		super(server, idSession);
-		System.out.println("depworker scenario constructor");
 	}
 	
 	@Override
 	protected void getSemesters() {
 		String semStr = server.getDepSemesters(idSession);
-		System.out.println(semStr);
 		semesters = (Semesters) XMLSerializer.xmlToObject(semStr, Semesters.class);
 		goToEvent(MainEvent.SEMESTERS);
 	}
@@ -29,13 +27,11 @@ public class DepWorkerScenario extends UserScenario {
 	public void setListIndex(int ind) {
 		switch(curEvent) {
 		case SEMESTERS:
-			assert(ind < semesters.getSemesters().size());
 			Semester sem = semesters.getSemesters().get(ind);
 			curSemester = XMLSerializer.objectToXML(sem);
 			goToEvent(MainEvent.FLOW_OR_GROUP_MENU);
 			break;
 		case FLOW_OR_GROUP_MENU:
-			assert(ind < 2);
 			isFlow = (ind == 1);
 			if(isFlow) {
 				groups = server.getDepFlows(idSession, curSemester);
@@ -50,7 +46,6 @@ public class DepWorkerScenario extends UserScenario {
 			goToEvent(MainEvent.GROUP_MENU);
 			break;
 		case GROUP_MENU:
-			assert(ind < 4);
 			if(ind < 3) {
 				curStage = ind + 1;
 				String xmlMarks;
@@ -72,7 +67,6 @@ public class DepWorkerScenario extends UserScenario {
 			}
 			break;
 		case GROUP_SUBJECTS:
-			assert(ind < subjects.size());
 			curSubject = subjects.get(ind);
 			String xmlMarks;
 			if(isFlow) {

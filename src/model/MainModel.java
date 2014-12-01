@@ -2,9 +2,13 @@ package model;
 
 import java.util.*;
 
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+
 import sp_entities.*;
 import sp_server.Server;
 import sp_server.ServerService;
+import view.MainView;
 
 public class MainModel extends Observable {
 	public enum MainEvent {
@@ -42,7 +46,7 @@ public class MainModel extends Observable {
 		newEvent = false;
 	}
 	
-	public void tempStart() {
+	public void start() {
 		curEvent = MainEvent.AUTHORIZATION;
 		setChanged();
 		notifyObservers(curEvent);
@@ -104,7 +108,7 @@ public class MainModel extends Observable {
 		newEvent = false;
 		scenario.goBack(historyPos);
 		curEvent = scenario.getCurEvent();
-		setChanged();;
+		setChanged();
 		notifyObservers(curEvent);
 	}
 	
@@ -152,5 +156,19 @@ public class MainModel extends Observable {
 		menu.add("Группы");
 		menu.add("Потоки");
 		return menu;
+	}
+	
+	public static void main(String[] args) {
+		try {
+			MainModel model = new MainModel();
+			MainView view = new MainView(model);
+			model.start();
+		} catch (Exception e) {
+			JFrame frame = new JFrame();
+			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			JOptionPane.showMessageDialog(frame, "Не удалось соединиться с сервером", "Ошибка",
+				        JOptionPane.ERROR_MESSAGE);
+			e.printStackTrace();
+		}
 	}
 }

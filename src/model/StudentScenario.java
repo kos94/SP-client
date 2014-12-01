@@ -12,7 +12,6 @@ public class StudentScenario extends UserScenario {
 
 	public StudentScenario(Server server, String idSession) {
 		super(server, idSession);
-		System.out.println("student scenario constructor");
 	}
 	
 	@Override

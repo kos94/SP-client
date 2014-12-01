@@ -2,6 +2,7 @@ package view;
 
 import sp_entities.GroupStageMarks;
 import sp_entities.GroupStageMarks.StudentStageMarks;
+import sp_entities.IMarks;
 
 public class StageMarksModel extends MarksTableModel {
 	private GroupStageMarks marks;
@@ -30,23 +31,23 @@ public class StageMarksModel extends MarksTableModel {
 			return sm.student;
 		} else {
 			if(row == nStud) {
-				byte d = marks.getSubjDebts().get(col-1);
-				return (d == -1)? "" : d;
+				byte d = marks.getSubjDebts().get(col - 1);
+				return (d == ABSENT)? "" : d;
 			}
 			if(row == nStud + 1) {
-				float avg = marks.getSubjAvg().get(col-1);
-				return (avg == -1)? "" : avg;
+				float avg = marks.getSubjAvg().get(col - 1);
+				return (avg == ABSENT)? "" : avg;
 			}
 			if(col == nSubj + 1) {
 				byte d = marks.getStudentDebts(row);
-				return (d == -1)? "" : d;
+				return (d == ABSENT)? "" : d;
 			}
 			if(col == nSubj + 2) {
 				float avg = marks.getStudentAvg(row);
-				return (avg == -1)? "" : avg;
+				return (avg == ABSENT)? "" : avg;
 			}
-			int mark = sm.marks.get(col-1);
-			return (mark == -1)? "" : mark;
+			int mark = sm.marks.get(col - 1);
+			return (mark == ABSENT)? "" : mark;
 		}
 	}
 	
@@ -56,12 +57,18 @@ public class StageMarksModel extends MarksTableModel {
 		if(col == 0) return "Студент";
 		if(col == nSubj + 1) return "Долгов";
 		if(col == nSubj + 2) return "Средний балл";
-		return marks.getSubjects().get(col-1);
+		return marks.getSubjects().get(col - 1);
 	}
 	@Override
 	public boolean isNeedToHighlight(int row, int col) {
 		int nSubj = marks.getSubjects().size();
 		int nStud = marks.getStudentsNumber();
 		return (row >= nStud || col >= nSubj + 1);
+	}
+	@Override
+	public boolean isDebt(int row, int col) {
+		if(col == 0 || isNeedToHighlight(row, col)) return false;
+		byte m = marks.getStudentMark(row).marks.get(col - 1);
+		return (m != ABSENT && m < MIN_MARK[marks.getStage()]);
 	}
 }

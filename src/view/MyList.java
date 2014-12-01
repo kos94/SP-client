@@ -29,17 +29,8 @@ public class MyList extends JList<String> {
 		
 	}
 	
-	public void listenToList(boolean isListen) {
-		MouseMotionListener[] l = getMouseMotionListeners();
-		if(isListen) {
-			if(l.length == 0) {
-				addMouseMotionListener(motionListener);
-			}
-		} else {
-			if(l.length != 0) {
-				removeMouseMotionListener(motionListener);
-			}
-		}
+	public void listenToList() {
+		addMouseMotionListener(motionListener);
 	}
 		
 	public MyList() {

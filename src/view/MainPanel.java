@@ -2,6 +2,7 @@ package view;
 
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
@@ -9,6 +10,7 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+
 import controller.MainController;
 import model.MainModel;
 import sp_entities.AuthData;
@@ -19,10 +21,10 @@ public class MainPanel extends JPanel {
 	private MainController controller;
 	public GroupLayout layout;
 	
+	private final Font plainFont = new Font("Verdana", Font.PLAIN, 16);
+	
 	public static final int PANEL_X = 800, PANEL_Y = 600;
-	private static final int TOP_PANEL_Y = 100, BOTTOM_PANEL_Y = 50;
-	private static final int TOP_HOR_MARGIN = 10 + PANEL_X/30;;
-	private static final int SCROLL_HOR_MARGIN = TOP_HOR_MARGIN;
+	private static final int TOP_PANEL_Y = 100;
 	private JPanel topPanel;
 	private boolean historyShowing;
 	private Image arrowImage;
@@ -45,8 +47,7 @@ public class MainPanel extends JPanel {
 		
 		mainScroll = new JScrollPane(list);
 		mainScroll.setPreferredSize(
-				new Dimension(PANEL_X - SCROLL_HOR_MARGIN*2, 
-						PANEL_Y - TOP_PANEL_Y - BOTTOM_PANEL_Y));
+				new Dimension(PANEL_X, PANEL_Y - TOP_PANEL_Y));
 				
 		layout = new GroupLayout(this);
 		this.setLayout(layout);
@@ -66,7 +67,7 @@ public class MainPanel extends JPanel {
 			arrowImage = ImageIO.read(new File("history_arrow.png"))
 					.getScaledInstance(20, 20, java.awt.Image.SCALE_AREA_AVERAGING);
 		} catch (IOException e) {
-			System.out.println("Error! Arrow icon not found");
+			e.printStackTrace();
 		}
 		
 		marksTable = new MarksTable();
@@ -79,18 +80,26 @@ public class MainPanel extends JPanel {
 	public void showMainPage(AuthData data) {
 		topPanel.removeAll();
 		topPanel.repaint();
+		JLabel label = new JLabel("Имя: " + data.getName());
+		label.setFont(plainFont);
+		topPanel.add(label);
 		hSize = 0;
-		topPanel.add(new JLabel("Имя: " + data.getName(), SwingConstants.LEFT));
+		
+		
 		String dep = data.getDepartment();
 		if (dep != null) {
-			topPanel.add(new JLabel("Кафедра: " + dep));
+			label = new JLabel("Кафедра: " + dep);
+			label.setFont(plainFont);
+			topPanel.add(label);
 		}
 		String group = data.getGroup();
 		if (group != null) {
-			topPanel.add(new JLabel("Группа: " + group));
+			label = new JLabel("Группа: " + group);
+			label.setFont(plainFont);
+			topPanel.add(label);
 		}
 
-		list.listenToList(true);
+		list.listenToList();
 		setListData(model.getRoles());
 	}
 
@@ -135,7 +144,6 @@ public class MainPanel extends JPanel {
 
 	public void showMarks(IMarks m) {
 		m.printMarks();
-		System.out.println("show marks");
 		marksTable.setContent(m);
 		mainScroll.setViewportView(marksTable);
 		mainScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);

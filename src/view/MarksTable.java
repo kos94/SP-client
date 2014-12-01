@@ -1,5 +1,6 @@
 package view;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 
@@ -17,7 +18,7 @@ import sp_entities.SubjectMarks;
 public class MarksTable extends JTable {
 	private final Font boldFont = new Font("Verdana", Font.BOLD, 12);
 	private final Font plainFont = new Font("Verdana", Font.PLAIN, 12);
-	
+	private final Color debtColor = new Color(255, 234, 225);
 	private MarksTableModel model;
 	public MarksTable() {
 		super();
@@ -28,7 +29,8 @@ public class MarksTable extends JTable {
 	
 	public void adjustColumnSizes(int margin) {
 		JTable table = this;
-        DefaultTableColumnModel colModel = (DefaultTableColumnModel) table.getColumnModel();
+        DefaultTableColumnModel colModel = 
+        		(DefaultTableColumnModel) table.getColumnModel();
         
         for(int i=0; i<colModel.getColumnCount(); i++) {
         	TableColumn col = colModel.getColumn(i);
@@ -56,7 +58,6 @@ public class MarksTable extends JTable {
     }
 	
 	public void setContent(IMarks m) {
-		System.out.println("set content");
 		if(m instanceof GroupSubjectMarks) {
 			model = new SubjectMarksModel((GroupSubjectMarks)m);
 		} else if(m instanceof GroupStageMarks) {
@@ -77,10 +78,17 @@ public class MarksTable extends JTable {
 	public Component prepareRenderer(
 			TableCellRenderer renderer, int row, int col) {
 		Component c = super.prepareRenderer(renderer, row, col);
-		if(model.isNeedToHighlight(row, col)) 
+		if(model.isNeedToHighlight(row, col)) {
 			c.setFont( boldFont );
-		else 
+			c.setBackground(Color.white);
+		} else {
 			c.setFont( plainFont );
+			if(model.isDebt(row, col)) {
+				c.setBackground(debtColor);
+			} else {
+				c.setBackground(Color.white);
+			}
+		}
 		return c;
 	}
 }
