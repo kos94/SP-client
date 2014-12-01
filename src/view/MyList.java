@@ -14,20 +14,34 @@ import javax.swing.*;
 public class MyList extends JList<String> {
 	private int lastIndex;
 	private DefaultListModel<String> mainListModel;
+	private MouseMotionListener motionListener;
 	
 	class MyCellRenderer extends DefaultListCellRenderer {
 		private Color hoverColor = new Color(222, 233, 243);
 		
 		public Component getListCellRendererComponent(JList list, Object value,
-				int index, boolean isSelected, boolean cellHasFocus) {
-			System.out.println("render");
+				int index, boolean isSelected, boolean cellHasFocus) {	
 			Component row = super.getListCellRendererComponent(list, value,
 					index, isSelected, cellHasFocus);
 			if(index == lastIndex) row.setBackground(hoverColor);
 			return row;
 		}
+		
 	}
 	
+	public void listenToList(boolean isListen) {
+		MouseMotionListener[] l = getMouseMotionListeners();
+		if(isListen) {
+			if(l.length == 0) {
+				addMouseMotionListener(motionListener);
+			}
+		} else {
+			if(l.length != 0) {
+				removeMouseMotionListener(motionListener);
+			}
+		}
+	}
+		
 	public MyList() {
 		super();
 		
@@ -36,7 +50,8 @@ public class MyList extends JList<String> {
 		setModel(mainListModel);
 		setFont(  new Font("Verdana", Font.PLAIN, 12) );
 		
-		addMouseMotionListener(new MouseMotionListener() {
+		
+		motionListener = new MouseMotionListener() {
 			@Override
 			public void mouseDragged(MouseEvent ev) {}
 			@Override
@@ -54,7 +69,7 @@ public class MyList extends JList<String> {
 					list.repaint();
 				}
 			}
-		});
+		};
 		
 		addMouseListener(new MouseListener() {
 			@Override

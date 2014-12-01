@@ -54,7 +54,6 @@ public class MainController implements ActionListener, MouseListener, Observer, 
 	public void actionPerformed(ActionEvent evt) {
 		// TODO Auto-generated method stub
 		String command = evt.getActionCommand();
-		System.out.println("controller actionPerformed\n" + command);
 		if(command.equals(MainView.LOGIN_ACTION_COMMAND)) {
 			String loginStr = view.getLogin();
 			String pass = view.getPassword();
@@ -62,8 +61,6 @@ public class MainController implements ActionListener, MouseListener, Observer, 
 				return;
 			int id = Integer.parseInt(loginStr);
 			model.login(id, pass);
-			
-			System.out.println("login confirmation: " + view.getLogin() + " " + view.getPassword());
 		} else if(command.equals(MainView.BACK_BUTTON_COMMAND)) {
 			model.goBack();
 		} else if(command.matches("(" + MainView.HISTORY_BUTTON_COMMAND + ")[0-9]+")) {

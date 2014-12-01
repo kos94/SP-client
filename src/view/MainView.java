@@ -9,8 +9,6 @@ import sp_entities.AuthData;
 
 import java.awt.*;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.io.IOException;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -60,13 +58,13 @@ class LoginPanel extends JPanel {
 		c.gridwidth = 1;
 		add(new JLabel("ID: "), c);
 		c.gridx = 1;
-		add(login, c); /* TODO DEL */ login.setText("4");
+		add(login, c);
 
 		c.gridx = 0;
 		c.gridy++;
 		add(new JLabel("Пароль: "), c);
 		c.gridx = 1;
-		add(password, c); /* TODO DEL */ password.setText("c956");
+		add(password, c); 
 
 		c.insets = new Insets(0, 0, 0, 0);
 		c.gridx = 0;
@@ -102,19 +100,21 @@ public class MainView extends JFrame implements Observer {
 	public MainView(MainModel m) {
 		super("Анализ успеваемости");
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
+		
 		model = m;
 		model.addObserver(this);
 		controller = new MainController(model, this);
 
 		KeyboardFocusManager.getCurrentKeyboardFocusManager()
-				.addKeyEventDispatcher(controller);
+				.addKeyEventDispatcher(controller);	
 	}
 	
-	private void placeToCenter() {
-		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-		this.setLocation(dim.width / 2 - this.getSize().width / 2, dim.height
-				/ 2 - this.getSize().height / 2);
-	}
+//	public void placeToCenter() {
+//		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+//		this.setLocation(dim.width / 2 - this.getSize().width / 2, dim.height
+//				/ 2 - this.getSize().height / 2);
+//	}
 
 	public String getLogin() {
 		return loginPanel.getLogin();
@@ -127,38 +127,37 @@ public class MainView extends JFrame implements Observer {
 	@Override
 	public void update(Observable o, Object arg) {
 		MainModel.MainEvent event = (MainModel.MainEvent) arg;
-		System.out.println("update on view" + event.name());
+//		System.out.println("update on view" + event.name());
 		boolean newEvent = model.isNewEvent();
 		
 		switch (event) {
 		case AUTHORIZATION:
+			System.out.println("--> AUTH");
 			System.out.println("show dialog");
 			this.getContentPane().removeAll();
 			loginPanel = new LoginPanel(controller);
 			this.add(loginPanel);
 			this.pack();
-			this.placeToCenter();
+			this.setLocationRelativeTo(null);
 			this.setVisible(true);
 			break;
 		case AUTHORIZATION_FAIL:
+			System.out.println("--> AUTH FAIL");
 			JOptionPane.showMessageDialog(this,
 					"Неверная комбинация логин/пароль", "Ошибка",
 					JOptionPane.INFORMATION_MESSAGE);
 			return;
 		case ROLES:
+			System.out.println("--> ROLES");
 			AuthData data = model.getAuthData();
-			if(newEvent) {
-				this.setVisible(false);
+			if(newEvent && mainPanel == null) {
 				this.getContentPane().removeAll();
 				mainPanel = new MainPanel(model, controller);
-				mainPanel.showMainPage(data);
 				this.add(mainPanel);
 				this.pack();
-				this.placeToCenter();
-				this.setVisible(true);
-			} else {
-				mainPanel.showMainPage(data);
+				this.setLocationRelativeTo(null);
 			}
+			mainPanel.showMainPage(data);
 			break;
 		case SEMESTERS:
 			if(newEvent) {
@@ -183,10 +182,10 @@ public class MainView extends JFrame implements Observer {
 			break;
 		}
 		
-		if(mainPanel != null) {
+		if(mainPanel != null && mainPanel.isHistoryShowing()) {
 			if(newEvent) {
 				mainPanel.addEventToHistory(model.getUserChoice());
-			} else if(!newEvent) {
+			} else {
 				mainPanel.setHistoryPosition(model.getHistoryPosition());
 			}
 		}
